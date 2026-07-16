@@ -73,6 +73,62 @@ def make_pptx(path: Path, text: str = SAMPLE_TEXT) -> Path:
     return path
 
 
+def make_template_pptx(path: Path) -> Path:
+    """Build a template with mixed-formatting placeholders, including a token that is
+    deliberately split across two runs (as PowerPoint often does) and an image
+    placeholder shape."""
+    from pptx import Presentation
+    from pptx.dml.color import RGBColor
+    from pptx.util import Inches, Pt
+
+    prs = Presentation()
+    slide = prs.slides.add_slide(prs.slide_layouts[6])  # blank
+
+    # Title textbox with a run-split {{Title}} token, bold + red + size 28.
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.4), Inches(9), Inches(1))
+    p = title_box.text_frame.paragraphs[0]
+    r1 = p.add_run()
+    r1.text = "{{Ti"
+    r1.font.bold = True
+    r1.font.size = Pt(28)
+    r1.font.color.rgb = RGBColor(0xFF, 0x00, 0x00)
+    r2 = p.add_run()
+    r2.text = "tle}}"
+    r2.font.bold = True
+    r2.font.size = Pt(28)
+    r2.font.color.rgb = RGBColor(0xFF, 0x00, 0x00)
+
+    # Customer textbox, single run, size 18, named font.
+    cust = slide.shapes.add_textbox(Inches(0.5), Inches(1.5), Inches(9), Inches(0.6))
+    cp = cust.text_frame.paragraphs[0]
+    cr = cp.add_run()
+    cr.text = "Client: {{Customer}}"
+    cr.font.size = Pt(18)
+    cr.font.name = "Georgia"
+
+    # Two tokens in one paragraph.
+    meta = slide.shapes.add_textbox(Inches(0.5), Inches(2.2), Inches(9), Inches(0.6))
+    mp = meta.text_frame.paragraphs[0]
+    mr = mp.add_run()
+    mr.text = "Industry: {{Industry}} | Region: {{Region}}"
+    mr.font.size = Pt(14)
+
+    # Body with challenge/solution.
+    body = slide.shapes.add_textbox(Inches(0.5), Inches(3.0), Inches(9), Inches(2))
+    for label in ("Challenge: {{Challenge}}", "Solution: {{Solution}}", "Benefits:\n{{Benefits}}"):
+        para = body.text_frame.add_paragraph()
+        rr = para.add_run()
+        rr.text = label
+        rr.font.size = Pt(12)
+
+    # Image placeholder (whole-shape token).
+    img = slide.shapes.add_textbox(Inches(6.5), Inches(1.2), Inches(2.5), Inches(1.8))
+    img.text_frame.paragraphs[0].add_run().text = "{{Image}}"
+
+    prs.save(str(path))
+    return path
+
+
 def make_pdf(path: Path, text: str = SAMPLE_TEXT) -> Path:
     from reportlab.lib.pagesizes import letter
     from reportlab.pdfgen import canvas
