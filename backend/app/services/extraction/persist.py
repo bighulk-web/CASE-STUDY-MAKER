@@ -36,7 +36,7 @@ def run_extraction(session: Session, document: Document) -> Extraction:
         document_id=document.id,
         raw_text=result.combined_text(),
         page_count=result.page_count,
-        has_ocr=1 if result.has_ocr else 0,
+        has_ocr=result.has_ocr,
     )
     session.add(extraction)
     session.flush()

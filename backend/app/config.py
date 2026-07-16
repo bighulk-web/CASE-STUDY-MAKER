@@ -48,6 +48,8 @@ class Settings(BaseSettings):
 
     # Jobs
     job_concurrency: int = 2
+    # When true, enqueue() runs jobs inline (used by tests for determinism).
+    sync_jobs: bool = False
 
     # ---- Derived paths -------------------------------------------------
     @property
