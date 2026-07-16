@@ -63,6 +63,10 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    from app.api.errors import register_error_handlers
+
+    register_error_handlers(app)
+
     api = APIRouter(prefix="/api")
 
     from app.api.health import router as health_router

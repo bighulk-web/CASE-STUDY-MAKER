@@ -11,8 +11,9 @@
     "dev:electron": "wait-on tcp:5273 && cross-env NODE_ENV=development electron .",
     "build:renderer": "tsc -b && vite build",
     "build:electron": "tsc -p electron/tsconfig.json && node scripts/copy-electron.mjs",
-    "build:app": "npm run build:renderer && npm run build:electron && electron-builder",
     "build": "npm run build:renderer && npm run build:electron",
+    "build:backend": "bash ../scripts/build-backend.sh",
+    "package": "npm run build:backend && npm run build && electron-builder",
     "lint": "eslint . --max-warnings 0",
     "test": "vitest",
     "preview": "vite preview"
@@ -70,8 +71,12 @@
     "appId": "com.casestudymaker.app",
     "productName": "Case Study Maker",
     "files": ["dist/**/*", "dist-electron/**/*"],
+    "extraResources": [
+      { "from": "../backend/dist/csm-backend", "to": "backend" }
+    ],
     "directories": { "output": "release" },
     "win": { "target": "nsis" },
-    "linux": { "target": "AppImage" }
+    "linux": { "target": "AppImage" },
+    "mac": { "target": "dmg" }
   }
 }

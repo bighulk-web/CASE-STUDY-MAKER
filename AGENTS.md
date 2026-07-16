@@ -43,5 +43,13 @@ cd frontend && npx vitest run                    # frontend only
 - Optional dependencies (chromadb, sentence-transformers, cloud SDKs, tesseract, libreoffice)
   are detected at runtime via `/api/capabilities`; the app degrades gracefully without them.
 
+## Packaging
+```bash
+make package   # PyInstaller bundle backend -> electron-builder installer (win/linux/mac)
+```
+The Electron main process spawns the bundled backend (`resources/backend/csm-backend`)
+as a sidecar in production; in dev it expects `make dev-backend` running separately.
+
 ## Data dir override
 Set `CSM_DATA_DIR=/path` to sandbox all state (DB, storage, chroma, presentations).
+Set `CSM_SYNC_JOBS=true` to run background jobs inline (used by tests for determinism).

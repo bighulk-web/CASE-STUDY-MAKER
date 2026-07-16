@@ -1,4 +1,4 @@
-.PHONY: help setup dev dev-backend dev-frontend test test-backend test-frontend lint lint-backend lint-frontend build clean
+.PHONY: help setup dev dev-backend dev-frontend test test-backend test-frontend lint lint-backend lint-frontend build package clean
 
 PY := backend/.venv/bin/python
 PIP := backend/.venv/bin/pip
@@ -35,7 +35,10 @@ lint-frontend:
 lint: lint-backend lint-frontend
 
 build:
-	cd frontend && npm run build:app
+	cd frontend && npm run build
+
+package:
+	cd frontend && npm run package
 
 clean:
 	rm -rf backend/.venv frontend/node_modules frontend/dist frontend/dist-electron

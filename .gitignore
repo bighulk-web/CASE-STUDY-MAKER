@@ -15,6 +15,11 @@ frontend/dist/
 frontend/dist-electron/
 frontend/release/
 
+# PyInstaller / packaging artifacts
+backend/build/
+backend/dist/
+backend/*.spec
+
 # App runtime data
 .case-study-maker/
 *.db

@@ -26,3 +26,33 @@ See [AGENTS.md](./AGENTS.md) for setup, run, and test instructions.
 make dev-backend    # terminal 1
 make dev-frontend   # terminal 2
 ```
+
+## Architecture
+
+```
+Electron (main)  ──spawns──►  Python FastAPI backend (sidecar, localhost)
+      │                                   │
+   React renderer ──HTTP + WebSocket──────┘
+```
+
+- **Backend** (`backend/app`) is fully modular: `services/ingestion`, `services/extraction`,
+  `services/metadata`, `services/embeddings`, `services/vectorstore`, `services/search`,
+  `services/prompt`, `services/template`, `services/pptx`, `services/llm`, `services/jobs`.
+- **AI pipeline rule**: the LLM only (a) extracts case-study metadata, (b) parses the
+  user's prompt into a structured search intent, and (c) optionally rewrites structured
+  snippets. **Deck assembly is deterministic** placeholder population — the LLM never
+  generates a whole PowerPoint.
+- **Offline-first**: defaults to a heuristic analyzer + local hashing embeddings + a
+  numpy vector store, so everything works with no API keys or heavy models. Optional
+  upgrades: OpenAI/Anthropic/Gemini LLMs, BGE-large embeddings, ChromaDB — all
+  auto-detected and configurable in Settings.
+
+## Packaging
+
+```bash
+make package        # PyInstaller-bundle the backend + electron-builder installer
+```
+
+This produces a self-contained desktop app (the backend is bundled as a sidecar binary).
+`electron-builder` is configured for Windows (NSIS), Linux (AppImage), and macOS (dmg).
+Building/validating a signed **Windows** binary requires a Windows/CI host.
