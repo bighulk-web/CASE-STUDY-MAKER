@@ -1,0 +1,35 @@
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist-electron/
+frontend/release/
+frontend/*.tsbuildinfo
+frontend/tsconfig.tsbuildinfo
+
+# PyInstaller / packaging artifacts
+backend/build/
+backend/dist/
+backend/*.spec
+
+# App runtime data
+.case-study-maker/
+*.db
+*.db-wal
+*.db-shm
+
+# OS / editor
+.DS_Store
+*.log
+.idea/
+.vscode/
