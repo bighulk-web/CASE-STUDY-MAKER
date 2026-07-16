@@ -1,5 +1,7 @@
 import { Route, Routes } from "react-router-dom";
+import { toast } from "sonner";
 import { Sidebar } from "@/components/sidebar";
+import { useJobStream } from "@/hooks/useJobStream";
 import { Dashboard } from "@/pages/Dashboard";
 import { Library } from "@/pages/Library";
 import { Templates } from "@/pages/Templates";
@@ -8,6 +10,9 @@ import { Builder } from "@/pages/Builder";
 import { SettingsPage } from "@/pages/Settings";
 
 export default function App() {
+  useJobStream((e) => {
+    if (e.status === "error") toast.error(`${e.type} failed: ${e.message ?? ""}`);
+  });
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       <Sidebar />
